@@ -1,0 +1,22 @@
+[
+  {
+    "key": "usernameInput",
+    "value": "txtUserName",
+    "type": "id"
+  },
+  {
+    "key": "passwordInput",
+    "value": "txtPassword",
+    "type": "id"
+  },
+  {
+    "key": "submitButton",
+    "value": "btnLogin",
+    "type": "id"
+  },
+  {
+    "key": "loggedInUserIndicator",
+    "value": "a[data-test-id='account']",
+    "type": "css"
+  }
+]

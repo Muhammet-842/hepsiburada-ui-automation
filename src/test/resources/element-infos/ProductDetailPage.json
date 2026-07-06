@@ -1,0 +1,17 @@
+[
+  {
+    "key": "addToCartButton",
+    "value": "button[data-test-id='addToCart']",
+    "type": "css"
+  },
+  {
+    "key": "addToCartConfirmationToast",
+    "value": "//*[contains(text(),'Ürün sepetinizde')]",
+    "type": "xpath"
+  },
+  {
+    "key": "productTitle",
+    "value": "h1[data-test-id='title']",
+    "type": "css"
+  }
+]

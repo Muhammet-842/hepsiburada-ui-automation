@@ -1,0 +1,17 @@
+[
+  {
+    "key": "accountMenuTrigger",
+    "value": "myAccount",
+    "type": "id"
+  },
+  {
+    "key": "loginLink",
+    "value": "login",
+    "type": "id"
+  },
+  {
+    "key": "searchInput",
+    "value": "input[data-test-id='search-bar-input']",
+    "type": "css"
+  }
+]

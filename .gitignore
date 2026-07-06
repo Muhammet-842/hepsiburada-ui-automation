@@ -1,0 +1,13 @@
+target/
+reports/
+logs/
+*.class
+.idea/
+*.iml
+.vscode/
+.gauge/
+src/test/resources/config/config.properties
+chrome-profile/
+.env
+.claude/
+env/default/java.properties
