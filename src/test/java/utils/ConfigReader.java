@@ -58,6 +58,14 @@ public class ConfigReader {
     }
 
     /**
+     * Senaryo bitince tarayici kapanmadan once, son ekrani (ör. sepet) gozlemleyebilmek
+     * icin beklenecek sure. Headless modda kullanilmaz.
+     */
+    public static int getPostScenarioPauseSeconds() {
+        return getInt("post.scenario.pause.seconds", 5);
+    }
+
+    /**
      * SMS/2FA dogrulamasinin tekrar tekrar istenmemesi icin kalici Chrome profil dizini.
      * Bu klasor gitignore'dadir (kisisel oturum verisi icerir).
      */

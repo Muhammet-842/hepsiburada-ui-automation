@@ -40,9 +40,10 @@ public class HomePage {
     }
 
     public void open(String baseUrl) {
+        // LOGOUT_URL zaten ReturnUrl=anasayfa parametresiyle otomatik anasayfaya yonlendiriyor,
+        // bu yuzden ayrica driver.get(baseUrl) cagirmak gereksiz bir ikinci tam sayfa yuklemesiydi.
         driver.get(LOGOUT_URL);
         waitUtils.waitForVisible(accountMenuTrigger);
-        driver.get(baseUrl);
         dismissCookieBannerIfPresent();
     }
 

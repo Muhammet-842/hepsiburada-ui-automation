@@ -55,6 +55,8 @@ public class HBTestSteps {
         Assert.assertTrue(
                 "Login basarisiz: kullanici adi sayfada gorunmuyor. Kullanici adi/sifre gecersiz olabilir ya da locator degismis olabilir.",
                 loginPage.isLoginSuccessful());
+
+        System.out.println("Kullanici basarili sekilde login oldu");
     }
 
     @Step("Kullanici arama kutusuna <aramaTerimi> yazip arar")
@@ -68,6 +70,8 @@ public class HBTestSteps {
         Assert.assertTrue(
                 "Arama sonuc listesi bos geldi veya sayfa beklenen surede yuklenmedi.",
                 searchResultsPage.areResultsDisplayed());
+
+        System.out.println("Arama sonuclari kullanici girdisine uygun geldi");
     }
 
     @Step("Kullanici ikinci satirdaki ilk urune tiklar")
@@ -76,11 +80,15 @@ public class HBTestSteps {
         // Sepette dogrulama icin arama terimi yerine urunun gercek basligini kullaniyoruz:
         // her urunun basligi arama terimini (ör. "bilgisayar") icermeyebilir (bazilari "Laptop" diyor).
         addedProductTitle = productDetailPage.getProductTitle();
+
+        System.out.println("Ikinci satirdaki ilk urunun sayfasina yonlendirildi: " + addedProductTitle);
     }
 
     @Step("Kullanici Sepete Ekle butonuna tiklar ve onay mesajini bekler")
     public void addProductToCart() {
         productDetailPage.addToCart();
+
+        System.out.println("Urun sepete eklendi");
     }
 
     @Step("Kullanici sepeti acar")
@@ -97,6 +105,6 @@ public class HBTestSteps {
                         + "Sepete ekleme basarisiz olmus olabilir veya sepet locator'i degismis olabilir.",
                 cartPage.containsProduct(addedProductTitle));
 
-        System.out.println("Sepete eklenen urun: " + addedProductTitle);
+        System.out.println("Sepet ekraninda eklenen urun goruntuleniyor: " + addedProductTitle);
     }
 }

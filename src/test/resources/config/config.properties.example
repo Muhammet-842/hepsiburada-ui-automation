@@ -4,6 +4,8 @@ timeout.pageload.seconds=30
 headless=false
 browser=chrome
 screenshot.dir=reports/screenshots
+post.scenario.pause.seconds=5
+chrome.profile.dir=chrome-profile
 
 # Kullanici adi/sifre BURAYA YAZILMAZ.
 # Once ortam degiskeni HB_USERNAME / HB_PASSWORD okunur,

@@ -83,7 +83,10 @@ public class WaitUtils {
                 "if (el) { el.click(); return true; }" +
                 "return false;";
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(10)).until(d ->
+            // Kalici profil sayesinde banner genelde ilk calistirmadan sonra hic cikmiyor;
+            // JS kontrolu kendisi ani oldugu icin kisa bir timeout yeterli, gereksiz yere
+            // her calistirmada uzun sure beklenmesini onler.
+            new WebDriverWait(driver, Duration.ofSeconds(3)).until(d ->
                     (Boolean) ((JavascriptExecutor) d).executeScript(script, elementId));
         } catch (Exception e) {
             // Banner hic cikmadiysa sessizce devam edilir.
