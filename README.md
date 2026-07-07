@@ -76,7 +76,15 @@ echo "gauge_additional_libs = $(cat cp.txt | tr ':' ','),src/test/resources" > e
 echo "gauge_additional_libs = $(cat cp.txt | tr ';' ',' | tr '\\\\' '/'),src/test/resources" > env/default/java.properties
 ```
 
-Delete `cp.txt` afterwards — it's a temporary file.
+```powershell
+# Windows (PowerShell)
+$cp = (Get-Content cp.txt) -replace ';', ',' -replace '\\', '/'
+"gauge_additional_libs = $cp,src/test/resources" | Set-Content -Encoding ascii env/default/java.properties
+```
+
+Delete `cp.txt` afterwards — it's a temporary file. Without this step, `gauge run` fails with a
+wall of `package ... does not exist` compiler errors, because Gauge's Java runner has no
+classpath at all on a fresh clone.
 
 ### Persistent Chrome profile (2FA)
 
