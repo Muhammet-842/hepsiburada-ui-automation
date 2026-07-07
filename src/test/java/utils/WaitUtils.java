@@ -2,7 +2,9 @@ package utils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +20,11 @@ public class WaitUtils {
     public WaitUtils(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitTimeoutSeconds()));
+        // Sayfa bir yonlendirme (redirect) ortasindayken Selenium'un o anki execution
+        // context'i gecici olarak kaybolabiliyor ("no such execution context" hatasi).
+        // Bu, gercek bir hata degil, gecici bir zamanlama sorunu oldugu icin, wait bunu
+        // görmezden gelip element gorunene kadar denemeye devam eder.
+        this.wait.ignoring(WebDriverException.class).ignoring(NoSuchSessionException.class);
     }
 
     public WebElement waitForVisible(By locator) {
