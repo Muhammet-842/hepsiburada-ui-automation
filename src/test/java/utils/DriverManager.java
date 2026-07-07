@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.File;
 import java.time.Duration;
 
 public class DriverManager {
@@ -32,7 +33,12 @@ public class DriverManager {
         // Kalici Chrome profili: SMS/2FA dogrulamasi bir kere manuel yapildiktan sonra
         // Hepsiburada bu tarayici profilini "guvenilir cihaz" olarak hatirlar, boylece
         // sonraki testlerde her calistirmada tekrar SMS kodu istenmez.
-        options.addArguments("--user-data-dir=" + ConfigReader.getChromeProfileDir());
+        // Config'te relative bir yol verilse bile (ör. "chrome-profile"), Chrome bunu kendi
+        // calisma dizinine gore yorumlayip acilamayabiliyor ("Chrome instance exited" hatasi).
+        // Bu yuzden yolu her zaman mutlak hale getiriyoruz, hangi bilgisayarda/dizinde
+        // calistirilirsa calistirilsin sorunsuz calissin diye.
+        String profileDir = new File(ConfigReader.getChromeProfileDir()).getAbsolutePath();
+        options.addArguments("--user-data-dir=" + profileDir);
         options.addArguments("--profile-directory=Default");
 
         // headless=true config.properties/env ile ac -> CI ortaminda kullanilir.
