@@ -1,21 +1,20 @@
-package utils;
+package driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import utils.ConfigReader;
 
 import java.io.File;
-import java.time.Duration;
 
-public class DriverManager {
+/**
+ * ChromeOptions'i kurup somut bir WebDriver ornegi uretir. Driver'in kendisi (yasam dongusu,
+ * ThreadLocal saklama) Driver sinifinda; burada sadece "nasil baslatilir" mantigi var.
+ */
+public class DriverFactory {
 
-    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
-
-    private DriverManager() {
-    }
-
-    public static void initDriver() {
+    public static WebDriver createDriver() {
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
@@ -33,10 +32,9 @@ public class DriverManager {
         // Kalici Chrome profili: SMS/2FA dogrulamasi bir kere manuel yapildiktan sonra
         // Hepsiburada bu tarayici profilini "guvenilir cihaz" olarak hatirlar, boylece
         // sonraki testlerde her calistirmada tekrar SMS kodu istenmez.
-        // Config'te relative bir yol verilse bile (ör. "chrome-profile"), Chrome bunu kendi
-        // calisma dizinine gore yorumlayip acilamayabiliyor ("Chrome instance exited" hatasi).
-        // Bu yuzden yolu her zaman mutlak hale getiriyoruz, hangi bilgisayarda/dizinde
-        // calistirilirsa calistirilsin sorunsuz calissin diye.
+        // Config'te relative bir yol verilse bile, Chrome bunu kendi calisma dizinine gore
+        // yorumlayip acilamayabiliyor ("Chrome instance exited" hatasi), bu yuzden yolu
+        // her zaman mutlak hale getiriyoruz.
         String profileDir = new File(ConfigReader.getChromeProfileDir()).getAbsolutePath();
         options.addArguments("--user-data-dir=" + profileDir);
         options.addArguments("--profile-directory=Default");
@@ -47,24 +45,6 @@ public class DriverManager {
             options.addArguments("--window-size=1920,1080");
         }
 
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getPageLoadTimeoutSeconds()));
-        driverThreadLocal.set(driver);
-    }
-
-    public static WebDriver getDriver() {
-        WebDriver driver = driverThreadLocal.get();
-        if (driver == null) {
-            throw new IllegalStateException("WebDriver henuz baslatilmadi. BeforeScenario hook'unu kontrol edin.");
-        }
-        return driver;
-    }
-
-    public static void quitDriver() {
-        WebDriver driver = driverThreadLocal.get();
-        if (driver != null) {
-            driver.quit();
-            driverThreadLocal.remove();
-        }
+        return new ChromeDriver(options);
     }
 }

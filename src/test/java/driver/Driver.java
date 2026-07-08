@@ -1,17 +1,31 @@
-package hooks;
+package driver;
 
 import com.thoughtworks.gauge.AfterScenario;
 import com.thoughtworks.gauge.BeforeScenario;
 import com.thoughtworks.gauge.ExecutionContext;
+import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
-import utils.DriverManager;
 import utils.ScreenshotUtils;
 
-public class TestHooks {
+/**
+ * WebDriver'in yasam dongusunu yonetir. Her senaryodan once yeni bir tarayici acilir, sonunda
+ * kapanir; bu sayede senaryolar birbirinden izole kalir (paylasilan durum sizmaz).
+ */
+public class Driver {
+
+    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     @BeforeScenario
     public void setUp() {
-        DriverManager.initDriver();
+        driverThreadLocal.set(DriverFactory.createDriver());
+    }
+
+    public static WebDriver getDriver() {
+        WebDriver driver = driverThreadLocal.get();
+        if (driver == null) {
+            throw new IllegalStateException("WebDriver henuz baslatilmadi. BeforeScenario hook'unu kontrol edin.");
+        }
+        return driver;
     }
 
     @AfterScenario
@@ -19,7 +33,7 @@ public class TestHooks {
         boolean scenarioFailed = context.getCurrentScenario().getIsFailing();
         if (scenarioFailed) {
             String scenarioName = context.getCurrentScenario().getName();
-            String path = ScreenshotUtils.captureOnFailure(DriverManager.getDriver(), scenarioName);
+            String path = ScreenshotUtils.captureOnFailure(getDriver(), scenarioName);
             System.err.println("Senaryo basarisiz oldu, ekran goruntusu: " + path);
         }
 
@@ -30,6 +44,10 @@ public class TestHooks {
             Thread.sleep(pauseSeconds * 1000L);
         }
 
-        DriverManager.quitDriver();
+        WebDriver driver = driverThreadLocal.get();
+        if (driver != null) {
+            driver.quit();
+            driverThreadLocal.remove();
+        }
     }
 }

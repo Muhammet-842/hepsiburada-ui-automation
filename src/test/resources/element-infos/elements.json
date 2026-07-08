@@ -1,0 +1,62 @@
+[
+  {
+    "key": "accountMenuTrigger",
+    "value": "myAccount",
+    "type": "id"
+  },
+  {
+    "key": "loginLink",
+    "value": "login",
+    "type": "id"
+  },
+  {
+    "key": "searchInput",
+    "value": "input[data-test-id='search-bar-input']",
+    "type": "css"
+  },
+  {
+    "key": "usernameInput",
+    "value": "txtUserName",
+    "type": "id"
+  },
+  {
+    "key": "passwordInput",
+    "value": "txtPassword",
+    "type": "id"
+  },
+  {
+    "key": "submitButton",
+    "value": "btnLogin",
+    "type": "id"
+  },
+  {
+    "key": "loggedInUserIndicator",
+    "value": "a[data-test-id='account']",
+    "type": "css"
+  },
+  {
+    "key": "productCard",
+    "value": "li.productListContent-zAP0Y5msy8OHn5z7T_K_",
+    "type": "css"
+  },
+  {
+    "key": "productLink",
+    "value": "a.productCardLink-module_productCardLink__GZ3eU",
+    "type": "css"
+  },
+  {
+    "key": "addToCartButton",
+    "value": "button[data-test-id='addToCart']",
+    "type": "css"
+  },
+  {
+    "key": "addToCartConfirmationToast",
+    "value": "//*[contains(text(),'Ürün sepetinizde')]",
+    "type": "xpath"
+  },
+  {
+    "key": "productTitle",
+    "value": "h1[data-test-id='title']",
+    "type": "css"
+  }
+]

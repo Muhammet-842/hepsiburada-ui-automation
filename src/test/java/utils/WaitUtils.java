@@ -67,15 +67,39 @@ public class WaitUtils {
     /**
      * dismissCookieBannerIfPresent normal DOM'da bulamadiginda kullanilir.
      * Bazi KVKK/cerez widget'lari shadow DOM icinde render edilir, By.id bunlari goremez.
+     * checkout.hepsiburada.com gibi farkli alt alan adlari, anasayfadan farkli bir cerez onay
+     * widget'i (ör. OneTrust) kullanabiliyor, dolayisiyla farkli bir id'ye sahip olabilir.
+     * Bilinen tum olasi id'ler sirayla denenir, ilk bulunan tiklanir.
      */
-    public void dismissCookieBannerInShadowDomIfPresent(String elementId) {
-        clickInsideShadowDomById(elementId);
+    public void dismissCookieBannerInShadowDomIfPresent(String... possibleElementIds) {
+        for (String elementId : possibleElementIds) {
+            if (clickInsideShadowDomById(elementId)) {
+                return;
+            }
+        }
+        // Hic bir id eslesmedi - farkli alt alan adlari farkli widget/id kullanabiliyor.
+        // Son care olarak, butonun goruntulenen metnine gore ariyoruz (ör. "Kabul Et"),
+        // id ne olursa olsun butonun uzerindeki yazi genelde ayni kaliyor.
+        clickInsideShadowDomByText("Kabul Et");
     }
 
-    private void clickInsideShadowDomById(String elementId) {
+    private boolean clickInsideShadowDomById(String elementId) {
+        return clickInsideShadowDom(
+                "root.querySelector('#' + CSS.escape(id))",
+                elementId);
+    }
+
+    private boolean clickInsideShadowDomByText(String buttonText) {
+        return clickInsideShadowDom(
+                "Array.from(root.querySelectorAll('button, a, div[role=\"button\"], span'))" +
+                "  .find(el => el.textContent && el.textContent.trim() === id)",
+                buttonText);
+    }
+
+    private boolean clickInsideShadowDom(String matchExpression, String matchValue) {
         String script =
                 "function deepFind(root, id) {" +
-                "  const direct = root.querySelector('#' + CSS.escape(id));" +
+                "  const direct = " + matchExpression + ";" +
                 "  if (direct) return direct;" +
                 "  const all = root.querySelectorAll('*');" +
                 "  for (const node of all) {" +
@@ -93,10 +117,11 @@ public class WaitUtils {
             // Kalici profil sayesinde banner genelde ilk calistirmadan sonra hic cikmiyor;
             // JS kontrolu kendisi ani oldugu icin kisa bir timeout yeterli, gereksiz yere
             // her calistirmada uzun sure beklenmesini onler.
-            new WebDriverWait(driver, Duration.ofSeconds(3)).until(d ->
-                    (Boolean) ((JavascriptExecutor) d).executeScript(script, elementId));
+            return new WebDriverWait(driver, Duration.ofSeconds(3)).until(d ->
+                    (Boolean) ((JavascriptExecutor) d).executeScript(script, matchValue));
         } catch (Exception e) {
             // Banner hic cikmadiysa sessizce devam edilir.
+            return false;
         }
     }
 }
