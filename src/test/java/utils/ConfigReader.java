@@ -53,10 +53,6 @@ public class ConfigReader {
         return getInt("timeout.pageload.seconds", 30);
     }
 
-    public static String getScreenshotDir() {
-        return get("screenshot.dir", "reports/screenshots");
-    }
-
     /**
      * Senaryo bitince tarayici kapanmadan once, son ekrani (ör. sepet) gozlemleyebilmek
      * icin beklenecek sure. Headless modda kullanilmaz.

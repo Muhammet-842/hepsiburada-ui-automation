@@ -2,10 +2,8 @@ package driver;
 
 import com.thoughtworks.gauge.AfterScenario;
 import com.thoughtworks.gauge.BeforeScenario;
-import com.thoughtworks.gauge.ExecutionContext;
 import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
-import utils.ScreenshotUtils;
 
 /**
  * WebDriver'in yasam dongusunu yonetir. Her senaryodan once yeni bir tarayici acilir, sonunda
@@ -29,14 +27,7 @@ public class Driver {
     }
 
     @AfterScenario
-    public void tearDown(ExecutionContext context) throws InterruptedException {
-        boolean scenarioFailed = context.getCurrentScenario().getIsFailing();
-        if (scenarioFailed) {
-            String scenarioName = context.getCurrentScenario().getName();
-            String path = ScreenshotUtils.captureOnFailure(getDriver(), scenarioName);
-            System.err.println("Senaryo basarisiz oldu, ekran goruntusu: " + path);
-        }
-
+    public void tearDown() throws InterruptedException {
         // Tarayici hemen kapanirsa son ekran (ör. sepet) goruntulenemiyor.
         // Headless degilse, kapatmadan once kisa bir sure bekleyip son durumu goruntulemeye firsat verilir.
         int pauseSeconds = ConfigReader.getPostScenarioPauseSeconds();

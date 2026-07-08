@@ -1,6 +1,6 @@
 # Hepsiburada UI Automation
 
-UI test automation project for [hepsiburada.com](https://www.hepsiburada.com), built with **Java**, **Gauge**, and **Selenium WebDriver** following the **Page Object Model (POM)**.
+UI test automation project for [hepsiburada.com](https://www.hepsiburada.com), built with **Java**, **Gauge**, and **Selenium WebDriver**, using a single keyword-driven step class instead of separate Page Object classes.
 
 ## Scenario covered
 
@@ -18,19 +18,22 @@ UI test automation project for [hepsiburada.com](https://www.hepsiburada.com), b
 ## Project structure
 
 ```
-specs/                                  Gauge .spec files (scenarios, plain language)
+specs/
+  HB-TC01.spec                          Scenario, plain language
+  concepts/hepsiburada.cpt               Reusable step groups (login, search, add-to-cart, cart check)
 src/test/java/
-  hooks/        TestHooks.java          BeforeScenario/AfterScenario (browser lifecycle, failure screenshots)
-  pages/                                Page Object classes (one per page)
-  stepimpl/     HBTestSteps.java        Maps spec steps to Page Object calls
-  utils/                                ConfigReader, DriverManager, ElementRepository, WaitUtils, ScreenshotUtils
+  driver/       Driver.java             BeforeScenario/AfterScenario (browser lifecycle)
+  driver/       DriverFactory.java      ChromeOptions setup (anti-bot flags, persistent profile, headless)
+  steps/        StepImplementation.java All @Step methods and Selenium logic in one class
+  utils/                                ConfigReader, ElementRepository, WaitUtils
 src/test/resources/
   config/       config.properties       Local settings + credentials (gitignored)
-  element-infos/*.json                  Locators, kept outside Java code
+  element-infos/elements.json           All locators, kept outside Java code
 env/default/                            Gauge environment configuration
 ```
 
-Locators are **not hardcoded in Java** — each Page Object pulls its `By` locators from a matching JSON file under `element-infos/` via `ElementRepository`.
+Locators are **not hardcoded in Java** — `StepImplementation` pulls its `By` locators from
+`element-infos/elements.json` via `ElementRepository`.
 
 ## Setup
 
@@ -101,8 +104,6 @@ or a single spec:
 ```bash
 gauge run specs/HB-TC01.spec
 ```
-
-On failure, a screenshot is saved under `reports/screenshots/`.
 
 ## Notes / known quirks handled in this project
 
