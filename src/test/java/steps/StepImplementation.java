@@ -212,10 +212,29 @@ public class StepImplementation {
 
     @Step("Kullanici Sepete Ekle butonuna tiklar ve onay mesajini bekler")
     public void addProductToCart() {
+        // Site zaman icinde "Urun sepetinizde" onay popup'ini kaldirip yerine
+        // sag ustteki bildirimi koydu; onay mesaji metnine bagli kalmak yerine
+        // sepet rozetindeki urun sayisinin artmasini bekliyoruz (ör. 2 -> 3).
+        int countBeforeClick = getCartItemCount();
+
         waitUtils().waitForClickable(ElementRepository.get("addToCartButton")).click();
-        waitUtils().waitForVisible(ElementRepository.get("addToCartConfirmationToast"));
+
+        new WebDriverWait(driver(), Duration.ofSeconds(ConfigReader.getExplicitTimeoutSeconds()))
+                .until(d -> getCartItemCount() > countBeforeClick);
 
         System.out.println("Urun sepete eklendi");
+    }
+
+    private int getCartItemCount() {
+        By cartItemCount = ElementRepository.get("cartItemCount");
+        if (!waitUtils().isDisplayedQuick(cartItemCount, 2)) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(driver().findElement(cartItemCount).getText().trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     @Step("Kullanici sepeti acar")

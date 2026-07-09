@@ -50,9 +50,9 @@
     "type": "css"
   },
   {
-    "key": "addToCartConfirmationToast",
-    "value": "//*[contains(text(),'Ürün sepetinizde')]",
-    "type": "xpath"
+    "key": "cartItemCount",
+    "value": "cartItemCount",
+    "type": "id"
   },
   {
     "key": "productTitle",
